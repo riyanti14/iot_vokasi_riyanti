@@ -1,10 +1,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
-
-
 #include "DHT.h"
-
 
 #define DHTPIN 27    
 #define DHTTYPE DHT22  
@@ -14,8 +11,8 @@ DHT dht(DHTPIN, DHTTYPE);
 
 
 // Ganti dengan kredensial WiFi Anda
-const char* ssid = "Wokwi-GUEST";
-const char* password = "";
+const char* ssid = "gratisan";
+const char* password = "satusampaisepuluh";
 
 
 unsigned long previousMillis = 0;
@@ -35,30 +32,18 @@ void setup() {
   Serial.println(" Terhubung!");
 
 
-
-
-
-
-
-
   dht.begin();
  
   // Tunggu sebentar agar koneksi stabil
   delay(1000);
 }
 
-
 void loop() {
   unsigned long currentMillis = millis();
-
 
   // Lakukan POST setiap interval yang telah ditentukan
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
-
-
-
-
 
 
     float h = round(dht.readHumidity());
@@ -72,30 +57,22 @@ void loop() {
       return;
     }
  
-
-
     // Compute heat index in Celsius (isFahreheit = false)
     float hic = dht.computeHeatIndex(t, h, false);
 
 
-
-
     // Inisialisasi HTTPClient
     HTTPClient http;
-    String url = "http://5943-175-45-191-11.ngrok-free.app/api/posts"; // Ganti dengan URL ngrok yang benar
+    String url = "http://8326-175-45-191-11.ngrok-free.app/api/posts"; // Ganti dengan URL ngrok yang benar
 
 
     http.begin(url);  // Menggunakan HTTP, bukan HTTPS
     http.addHeader("Content-Type", "application/json");
 
 
-
-
 String payload = "{\"nama_sensor\":\"Sensor GD\", \"nilai1\":" + String(h) + ", \"nilai2\":" + String(t) + "}";
 
-
 Serial.println(payload);  // Untuk melihat apakah payload sudah terbentuk dengan benar
-
 
     // Kirim POST request
     int httpResponseCode = http.POST(payload);
@@ -113,7 +90,6 @@ Serial.println(payload);  // Untuk melihat apakah payload sudah terbentuk dengan
     } else {
       Serial.println("Gagal mengirim data");
     }
-
 
     // Tutup koneksi HTTP
     http.end();
